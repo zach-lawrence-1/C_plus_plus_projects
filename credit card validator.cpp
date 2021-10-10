@@ -25,6 +25,7 @@ void validate()
 	return;
 }
 
+// breaks up the card into individual digits that are then stored in an array
 void cardbreakup()
 {
 	if (length < 13)
@@ -41,10 +42,9 @@ void cardbreakup()
 	}
 }
 
-// not sure which card check yet
+// uses luhn algorithm to check if the card is valid
 void cardcheck()
 {
-	//break card number up into array or other data type and then run luhn algorithm to validate card
 	for (int j = 1; j < length; j += 2)
 	{
 		cardbits[j] *= 2;
@@ -68,9 +68,10 @@ void cardcheck()
 	}
 }
 
+// checks for what kind of card it is
 void cardtype()
 {
-	// do switch case instead
+	// could maybe do switch case here instead but I don't want to in this scenario
 	if (cardbits[length - 1] == 4)
 	{
 		cout << "type: Visa Card" << endl;
@@ -93,6 +94,7 @@ void cardtype()
 	}
 }
 
+// runs all functions
 int main()
 {
 	cardbreakup();
