@@ -1,3 +1,7 @@
+/* dear reader, My goal for this project was to make checkers in c++ through the command line and learn how to use and manipulate objects and pointers 
+by implementing them into a project to get a better understanding of them. I want to later update this into a more optimized version, as well as making 
+it work without objects. I tried to implement colored pieces, but the way that I made the program work, made it impossible to my knowledge.*/
+
 #include<iostream>
 #include<vector>
 
