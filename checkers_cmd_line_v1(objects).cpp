@@ -2,6 +2,8 @@
 by implementing them into a project to get a better understanding of them. I want to later update this into a more optimized version, as well as making 
 it work without objects. I tried to implement colored pieces, but the way that I made the program work, made it impossible to my knowledge.*/
 
+// todo[] 1. check for cin fail 2. check for draw if one player can't move (not sure how to do yet) 3. make the way that you move and select pieces a little more clear
+
 #include<iostream>
 #include<vector>
 
