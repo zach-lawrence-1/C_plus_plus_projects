@@ -3,6 +3,7 @@ by implementing them into a project to get a better understanding of them. I wan
 it work without objects. I tried to implement colored pieces, but the way that I made the program work, made it impossible to my knowledge.*/
 
 // todo[] 1. check for cin fail 2. check for draw if one player can't move (not sure how to do yet) 3. make the way that you move and select pieces a little more clear
+// todo[] 4. optimize if statements and code in general 5. make a seperate non object oriented version 6. add cool win animation
 
 #include<iostream>
 #include<vector>
