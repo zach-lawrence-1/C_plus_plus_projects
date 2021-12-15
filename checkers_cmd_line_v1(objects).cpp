@@ -1,10 +1,3 @@
-/* dear reader, My goal for this project was to make checkers in c++ through the command line and learn how to use and manipulate objects and pointers 
-by implementing them into a project to get a better understanding of them. I want to later update this into a more optimized version, as well as making 
-it work without objects. I tried to implement colored pieces, but the way that I made the program work, made it impossible to my knowledge.*/
-
-// todo[] 1. check for cin fail 2. check for draw if one player can't move (not sure how to do yet) 3. make the way that you move and select pieces a little more clear
-// todo[] 4. optimize if statements and code in general 5. make a seperate non object oriented version 6. add cool win animation
-
 #include<iostream>
 #include<vector>
 
@@ -15,6 +8,7 @@ int selectx;
 int selecty;
 int same = 0;
 int gameOver = 0;
+int turn = 2;
 
 std::string board[8][8] = {
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 1
@@ -185,6 +179,7 @@ void bSelection()
 {
 	if (win == 0)
 	{
+		turn = 1;
 		int jump = 0;
 		int a = 0;
 		std::cout << "Black's turn: select a piece ";
@@ -192,7 +187,15 @@ void bSelection()
 		//get selection piece
 		std::cin >> selectx;
 		std::cin >> selecty;
-
+		
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore();
+			drawBoard();
+			std::cout << "cannot enter letter values" << std::endl;
+			bSelection();
+		}
 		//check if selection is a valid for white and restart function if it isn't
 		int sNum = 0;
 		same = 0;
@@ -206,7 +209,15 @@ void bSelection()
 				std::cout << "now select a location ";
 				std::cin >> currx;
 				std::cin >> curry;
-
+				
+				if (std::cin.fail())
+				{
+					std::cin.clear();
+					std::cin.ignore();
+					drawBoard();
+					std::cout << "cannot enter letter values" << std::endl;
+					bSelection();
+				}
 				//same location
 				if (currx == selectx && curry == selecty)
 				{
@@ -470,6 +481,7 @@ void bSelection()
 void doubleJumpB(int a, int selectx, int selecty)
 {
 	same = 0;
+	turn = 1;
 	for (auto& b : bCheckers)
 	{
 		if (selectx == b->x && selecty == b->y)
@@ -478,6 +490,14 @@ void doubleJumpB(int a, int selectx, int selecty)
 			std::cin >> currx;
 			std::cin >> curry;
 
+			if (std::cin.fail())
+			{
+				std::cin.clear();
+				std::cin.ignore();
+				drawBoard();
+				std::cout << "cannot enter letter values" << std::endl;
+				bSelection();
+			}
 			//same location
 			if (b->x == currx && b->y == curry)
 			{
@@ -665,6 +685,7 @@ void wSelection()
 {
 	if (win == 0)
 	{
+		turn = 2;
 		int jump = 0;
 		int a = 0;
 		std::cout << "White's turn: select a piece ";
@@ -673,6 +694,14 @@ void wSelection()
 		std::cin >> selectx;
 		std::cin >> selecty;
 
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore();
+			drawBoard();
+			std::cout << "cannot enter letter values" << std::endl;
+			wSelection();
+		}
 		//check if selection is a valid for white and restart function if it isn't
 		int sNum = 0;
 		same = 0;
@@ -689,6 +718,14 @@ void wSelection()
 				std::cin >> currx;
 				std::cin >> curry;
 
+				if (std::cin.fail())
+				{
+					std::cin.clear();
+					std::cin.ignore();
+					drawBoard();
+					std::cout << "cannot enter letter values" << std::endl;
+					wSelection();
+				}
 				//same location
 				if (currx == selectx && curry == selecty)
 				{
@@ -953,6 +990,7 @@ void wSelection()
 
 void doubleJumpA(int a, int selectx, int selecty)
 {
+	turn = 2;
 	same = 0;
 	for (auto& w : wCheckers)
 	{
@@ -962,6 +1000,14 @@ void doubleJumpA(int a, int selectx, int selecty)
 			std::cin >> currx;
 			std::cin >> curry;
 
+			if (std::cin.fail())
+			{
+				std::cin.clear();
+				std::cin.ignore();
+				drawBoard();
+				std::cout << "cannot enter letter values" << std::endl;
+				wSelection();
+			}
 			//same location
 			if (w->x == currx && w->y == curry)
 			{
@@ -1146,16 +1192,929 @@ void doubleJumpA(int a, int selectx, int selecty)
 	}
 }
 
+//check if unable to jump on edges at x=1 and x=6
+void tieGame()
+{
+	if (win == 0)
+	{
+		int black = 0;
+		int white = 0;
+		int drawCount = 0;
+		int validCount = 0;
+
+		//checks if white can't move
+		if (turn == 1)
+		{
+			for (auto& w : wCheckers)
+			{
+				auto cw = w;
+				cw->valid = 1;
+				selectx = w->x;
+				selecty = w->y;
+				validCount = 0;
+
+				if (selectx == 0 && selecty == 0)
+				{
+					validCount = 40;
+				}
+
+				if (validCount != 40)
+				{
+					if (cw->king == 1)
+					{
+						if (selecty == 0 || selecty == 7)
+						{
+							validCount = 4;
+						}
+
+						std::cout << validCount;
+					}
+
+					//try to do valid count and if its a certain value, it breaks the for loop
+					for (auto& w : wCheckers)
+					{
+						if (cw->king == 0)
+						{
+							//move right invalid
+							if ((selectx + 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							//move left invalid
+							if ((selectx - 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							// left edge
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 4)
+							{
+								cw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+
+						if (cw->king == 1)
+						{
+							//move right invalid
+							if ((selectx + 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							//move left invalid
+							if ((selectx - 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							//move right behind invalid
+							if ((selectx + 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							//move left behind invalid
+							if ((selectx - 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount += 2;
+							}
+
+							// left edge in front
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//left edge behind
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge front
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge behind
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 8)
+							{
+								cw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+					}
+
+					//checks if white has a black piece in any of its forward and backward moves
+					for (auto& b : bCheckers)
+					{
+						if (cw->king == 0)
+						{
+							//white cant jump out of bounds left edge
+							if (selectx == 1 && selectx - 1 == b->x && selecty + 1 == b->y)
+							{
+								validCount++;
+							}
+
+							//white cant jump out of bounds right edge
+							if (selectx == 6 && selectx + 1 == b->x && selecty + 1 == b->y)
+							{
+								validCount++;
+							}
+
+							//white cant jump out of bounds on bottom edge
+							if (selecty == 6)
+							{
+								if (selectx + 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+							}
+
+							//move right invalid
+							if ((selectx + 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount++;
+								black = 1;
+							}
+
+							//move right jump invalid
+							if (black == 1)
+							{
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							//move left invalid
+							if ((selectx - 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount++;
+								black = 2;
+							}
+
+							if (black == 2)
+							{
+								//move left jump invalid
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							// left edge
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 4)
+							{
+								cw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+
+						if (cw->king == 1)
+						{
+							//white king cant jump out of bounds left edge
+							if (selectx == 1)
+							{
+								if (selectx - 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == b->x && selecty - 1 == b->y)
+								{
+									validCount++;
+								}
+							}
+
+							//white king cant jump out of bounds right edge
+							if (selectx == 6)
+							{
+								if (selectx + 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+								if (selectx + 1 == b->x && selecty - 1 == b->y)
+								{
+									validCount++;
+								}
+							}
+
+							//white king cant jump out of bounds bottom edge
+							if (selecty == 6)
+							{
+								if (selectx + 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == b->x && selecty + 1 == b->y)
+								{
+									validCount++;
+								}
+							}
+
+							//white king cant jump out of bounds top edge
+							if (selecty == 1)
+							{
+								if (selectx + 1 == b->x && selecty - 1 == b->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == b->x && selecty - 1 == b->y)
+								{
+									validCount++;
+								}
+							}
+
+							//move right invalid
+							if ((selectx + 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount++;
+								black = 1;
+							}
+
+							//move right jump invalid
+							if (black == 1)
+							{
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							//move left invalid
+							if ((selectx - 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount++;
+								black = 2;
+							}
+
+							if (black == 2)
+							{
+								//move left jump invalid
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							//move right backward invalid
+							if ((selectx + 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount++;
+								black = 3;
+							}
+
+							//move right backward jump invalid
+							if (black == 3)
+							{
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							//move left backward invalid
+							if ((selectx - 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount++;
+								black = 4;
+							}
+
+							//move left backward jump invalid
+							if (black == 4)
+							{
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										black = 0;
+									}
+								}
+							}
+
+							// left edge
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							// left backward edge
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right backward edge
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 8)
+							{
+								cw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+					}
+				}
+
+				if (validCount == 40)
+				{
+					drawCount++;
+					cw->valid = 0;
+				}
+			}
+
+			if (drawCount == 12)
+			{
+				win += 3;
+			}
+		}
+
+		//checks if black can't move
+		if (turn == 2)
+		{
+			for (auto& b : bCheckers)
+			{
+				auto bw = b;
+				bw->valid = 1;
+				selectx = b->x;
+				selecty = b->y;
+				validCount = 0;
+
+				if (selectx == 0 && selecty == 0)
+				{
+					validCount = 40;
+				}
+
+				if (validCount != 40)
+				{
+					if (bw->king == 1)
+					{
+						if (selecty == 0 || selecty == 7)
+						{
+							validCount = 4;
+						}
+					}
+
+					//try to do valid count and if its a certain value, it breaks the for loop
+					for (auto& b : bCheckers)
+					{
+						if (bw->king == 0)
+						{
+							//move right invalid
+							if ((selectx + 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							//move left invalid
+							if ((selectx - 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							// left edge
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 4)
+							{
+								bw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+
+						if (bw->king == 1)
+						{
+							//move right invalid
+							if ((selectx + 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							//move left invalid
+							if ((selectx - 1 == b->x && selecty - 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							//move right behind invalid
+							if ((selectx + 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							//move left behind invalid
+							if ((selectx - 1 == b->x && selecty + 1 == b->y))
+							{
+								validCount += 2;
+							}
+
+							// left edge in front
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//left edge behind
+							if (selectx == 0 && b->x == selectx + 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge front
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge behind
+							if (selectx == 7 && b->x == selectx - 1 && b->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 8)
+							{
+								bw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+					}
+
+					//checks if black has a white piece in any of its forward and backward moves
+					for (auto& w : wCheckers)
+					{
+						if (bw->king == 0)
+						{
+							//black cant jump out of bounds left edge
+							if (selectx == 1 && selectx - 1 == w->x && selecty - 1 == w->y)
+							{
+								validCount++;
+							}
+
+							//black cant jump out of bounds right edge
+							if (selectx == 6 && selectx + 1 == w->x && selecty - 1 == w->y)
+							{
+								validCount++;
+							}
+
+							//black cant jump out of bounds top edge
+							if (selecty == 1)
+							{
+								if (selectx + 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+							}
+
+							//move right invalid
+							if ((selectx + 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount++;
+								white = 1;
+							}
+
+							//move right jump invalid
+							if (white == 1)
+							{
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							//move left invalid
+							if ((selectx - 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount++;
+								white = 2;
+							}
+
+							if (white == 2)
+							{
+								//move left jump invalid
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							// left edge
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 4)
+							{
+								bw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+
+						if (bw->king == 1)
+						{
+							//black king cant jump out of bounds left edge
+							if (selectx == 1)
+							{
+								if (selectx - 1 == w->x && selecty + 1 == w->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+							}
+
+							//black king cant jump out of bounds right edge
+							if (selectx == 6)
+							{
+								if (selectx + 1 == w->x && selecty + 1 == w->y)
+								{
+									validCount++;
+								}
+								if (selectx + 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+							}
+
+							//black king cant jump out of bounds top edge
+							if (selecty == 1)
+							{
+								if (selectx + 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == w->x && selecty - 1 == w->y)
+								{
+									validCount++;
+								}
+							}
+
+							//black king cant jump out of bounds bottom edge
+							if (selecty == 6)
+							{
+								if (selectx + 1 == w->x && selecty + 1 == w->y)
+								{
+									validCount++;
+								}
+								if (selectx - 1 == w->x && selecty + 1 == w->y)
+								{
+									validCount++;
+								}
+							}
+
+							//move right invalid
+							if ((selectx + 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount++;
+								white = 1;
+							}
+
+							//move right jump invalid
+							if (white == 1)
+							{
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							//move left invalid
+							if ((selectx - 1 == w->x && selecty - 1 == w->y))
+							{
+								validCount++;
+								white = 2;
+							}
+
+							if (white == 2)
+							{
+								//move left jump invalid
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty - 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty - 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							//move right backward invalid
+							if ((selectx + 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount++;
+								white = 3;
+							}
+
+							//move right backward jump invalid
+							if (white == 3)
+							{
+								for (auto& w : wCheckers)
+								{
+									if ((selectx + 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx + 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							//move left backward invalid
+							if ((selectx - 1 == w->x && selecty + 1 == w->y))
+							{
+								validCount++;
+								white = 4;
+							}
+
+							//move left backward jump invalid
+							if (white == 4)
+							{
+								for (auto& w : wCheckers)
+								{
+									if ((selectx - 2 == w->x && selecty + 2 == w->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+								for (auto& b : bCheckers)
+								{
+									if ((selectx - 2 == b->x && selecty + 2 == b->y))
+									{
+										validCount++;
+										white = 0;
+									}
+								}
+							}
+
+							// left edge
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							// left backward edge
+							if (selectx == 0 && w->x == selectx + 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							//right edge
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty - 1)
+							{
+								validCount += 2;
+							}
+
+							//right backward edge
+							if (selectx == 7 && w->x == selectx - 1 && w->y == selecty + 1)
+							{
+								validCount += 2;
+							}
+
+							if (validCount == 8)
+							{
+								bw->valid = 0;
+								validCount = 0;
+								drawCount++;
+								break;
+							}
+						}
+					}
+				}
+
+				if (validCount == 40)
+				{
+					drawCount++;
+					bw->valid = 0;
+				}
+			}
+
+			if (drawCount == 12)
+			{
+				win += 4;
+			}
+		}
+	}
+}
+
 int main()
 {
+	char s;
+	std::cout << "To select a piece, type the x coordinate and hit enter and type the y coordinate and hit enter." << std::endl << "To move, do the same process but for a new position. ";
+	std::cout << std::endl << "Valid moves are 1 diagonal left or right and 2 diagonal left or right if you are jumping a piece." << std::endl << "Only the king can move and jump backwards";
+	std::cout << std::endl << "Do you understand?";
+	std::cin >> s;
+	
 	defaultLocations();
+	
 	while(gameOver == 0)
 		switch (win)
 		{
 			case 0:
 				drawBoard();
+				tieGame();
 				bSelection();
 				drawBoard();
+				tieGame();
 				wSelection();
 				break;
 			case 1:
@@ -1167,6 +2126,16 @@ int main()
 				gameOver = 1;
 				drawBoard();
 				std::cout << "white wins" << std::endl;
+				break;
+			case 3:
+				gameOver = 1;
+				drawBoard();
+				std::cout << "draw white can't move" << std::endl;
+				break;
+			case 4:
+				gameOver = 1;
+				drawBoard();
+				std::cout << "draw black can't move" << std::endl;
 				break;
 		}
 }
