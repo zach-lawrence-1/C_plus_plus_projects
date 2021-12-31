@@ -204,8 +204,8 @@ void bSelection()
 		{
 			if (selectx == b->x && selecty == b->y)
 			{
+				b->valid = 0;
 				sNum = 1;
-
 				std::cout << "now select a location ";
 				std::cin >> currx;
 				std::cin >> curry;
@@ -486,6 +486,7 @@ void doubleJumpB(int a, int selectx, int selecty)
 	{
 		if (selectx == b->x && selecty == b->y)
 		{
+			b->valid = 0;
 			std::cout << "now select a second jump ";
 			std::cin >> currx;
 			std::cin >> curry;
@@ -710,6 +711,7 @@ void wSelection()
 		{
 			if (selectx == w->x && selecty == w->y)
 			{
+				w->valid = 0;
 				//verifies successfull selection
 				sNum = 1;
 				
@@ -996,6 +998,7 @@ void doubleJumpA(int a, int selectx, int selecty)
 	{
 		if (selectx == w->x && selecty == w->y)
 		{
+			w->valid = 0;
 			std::cout << "now select a second jump ";
 			std::cin >> currx;
 			std::cin >> curry;
