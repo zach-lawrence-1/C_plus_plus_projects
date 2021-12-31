@@ -23,7 +23,7 @@ std::string board[8][8] = {
 
 class whiteCheckers {
 public:
-	int valid;
+	int valid = 0;
 	int x = 1;
 	int y = 0;
 	std::string piece = "w";
@@ -37,7 +37,7 @@ std::vector<whiteCheckers*> wCheckers;
 
 class blackCheckers {
 public:
-	int valid;
+	int valid = 0;
 	int x = 0;
 	int y = 7;
 	std::string piece = "b";
