@@ -676,7 +676,7 @@ void wSelection()
 		{
 			if (selectx == w->x && selecty == w->y)
 			{
-				b->valid = 0;
+				w->valid = 0;
 				//verifies successfull selection
 				sNum = 1;
 				
@@ -954,7 +954,7 @@ void doubleJumpA(int a, int selectx, int selecty)
 	{
 		if (selectx == w->x && selecty == w->y)
 		{
-			b->valid = 0;
+			w->valid = 0;
 			std::cout << "now select a second jump ";
 			std::cin >> currx;
 			std::cin >> curry;
