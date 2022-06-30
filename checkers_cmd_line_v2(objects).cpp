@@ -7,9 +7,9 @@ int curry;
 int selectx;
 int selecty;
 int same = 0;
-int gameOver = 0;
 int turn = 2;
 
+//two extra rows for dead pieces
 std::string board[8][8] = {
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 1
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 2
@@ -30,6 +30,7 @@ public:
 	std::string kingPiece = "W";
 	int death = 0;
 	int king = 0;
+
 };
 whiteCheckers cw1, cw2, cw3, cw4, cw5, cw6, cw7, cw8, cw9, cw10, cw11, cw12;
 
@@ -2109,7 +2110,7 @@ int main()
 	
 	defaultLocations();
 	
-	while(gameOver == 0)
+	while(true)
 		switch (win)
 		{
 			case 0:
@@ -2121,24 +2122,20 @@ int main()
 				wSelection();
 				break;
 			case 1:
-				gameOver = 1;
 				drawBoard();
 				std::cout << "black wins" << std::endl;
-				break;
+				return 0;
 			case 2:
-				gameOver = 1;
 				drawBoard();
 				std::cout << "white wins" << std::endl;
-				break;
+				return 0;
 			case 3:
-				gameOver = 1;
 				drawBoard();
 				std::cout << "draw white can't move" << std::endl;
-				break;
+				return 0;
 			case 4:
-				gameOver = 1;
 				drawBoard();
 				std::cout << "draw black can't move" << std::endl;
-				break;
+				return 0;
 		}
 }
