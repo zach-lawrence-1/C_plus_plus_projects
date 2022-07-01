@@ -4,6 +4,7 @@
 int win = 0;
 int turn = 2;
 
+//two extra rows for dead pieces
 std::string board[8][8] = {
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 1
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 2
@@ -245,7 +246,7 @@ void bSelection()
 
 					if (curry == selecty + 1 && b->king == 0)
 					{
-						b->valid == 0;
+						b->valid = 0;
 					}
 
 					if (same == 1)
@@ -275,7 +276,7 @@ void bSelection()
 
 					if (curry == selecty + 1 && b->king == 0)
 					{
-						b->valid == 0;
+						b->valid = 0;
 					}
 
 					if (same == 1)
