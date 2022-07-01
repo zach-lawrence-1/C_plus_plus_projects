@@ -1,1 +1,1 @@
-
+Making my first github folder for a more proper organization of future projects rather than the current cluster. I will also try building my first project which will be this one with cmake or something like that so it is easier to run my uploaded projects.
