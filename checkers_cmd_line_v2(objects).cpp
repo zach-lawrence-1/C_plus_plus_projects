@@ -4,7 +4,6 @@
 int win = 0;
 int turn = 2;
 
-//two extra rows for dead pieces
 std::string board[8][8] = {
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 1
 	{" ", " ", " ", " ", " ", " ", " ", " "},   // row 2
