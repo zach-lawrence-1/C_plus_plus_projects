@@ -2,11 +2,6 @@
 #include<vector>
 
 int win = 0;
-int currx;
-int curry;
-int selectx;
-int selecty;
-int same = 0;
 int turn = 2;
 
 //two extra rows for dead pieces
@@ -180,6 +175,11 @@ void bSelection()
 {
 	if (win == 0)
 	{
+		int currx = 0;
+		int curry = 0;
+		int selectx = 0;
+		int selecty = 0;
+		int same = 0;
 		turn = 1;
 		int jump = 0;
 		int a = 0;
@@ -481,6 +481,9 @@ void bSelection()
 
 void doubleJumpB(int a, int selectx, int selecty)
 {
+	int currx = 0;
+	int curry = 0;
+	int same = 0;
 	same = 0;
 	turn = 1;
 	for (auto& b : bCheckers)
@@ -688,6 +691,11 @@ void wSelection()
 	if (win == 0)
 	{
 		turn = 2;
+		int currx = 0;
+		int curry = 0;
+		int selectx = 0;
+		int selecty = 0;
+		int same = 0;
 		int jump = 0;
 		int a = 0;
 		std::cout << "White's turn: select a piece ";
@@ -993,6 +1001,9 @@ void wSelection()
 
 void doubleJumpA(int a, int selectx, int selecty)
 {
+	int currx = 0;
+	int curry = 0;
+	int same = 0;
 	turn = 2;
 	same = 0;
 	for (auto& w : wCheckers)
@@ -1201,6 +1212,8 @@ void tieGame()
 {
 	if (win == 0)
 	{
+		int selectx = 0;
+		int selecty = 0;
 		int black = 0;
 		int white = 0;
 		int drawCount = 0;
