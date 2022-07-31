@@ -11,4 +11,5 @@ be organizing my bigger projects in the future.
 **Running the project**
 
 As of now I can only upload the source code so in order to run it, you need to download the c++ files and put them in your project directory and compile it. If you
-are using visual studio, make a new project and put the c++ files and header file in the project directory where needed and it should run.
+are using visual studio, make a new project and put the c++ files and header file in the project directory where needed and drag the c++ files under source template
+and header file under header template and it should run.
