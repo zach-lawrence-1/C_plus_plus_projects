@@ -9,5 +9,5 @@ be organizing my bigger projects in the future.
 
 **Running the project**
 
-As of now I can only upload the source code and not any build files so in order to run it, you need to make an empty c++ project and copy and paste the code.
-In the future I will include build files so you can run it without having to make a new project.
+As of now I can only upload the source code and not any build files so in order to run it, you need to make an empty c++ project and download the c++ files and put
+them in your project directory and compile it. In the future I will include build files so you can run it without having to make a new project.
