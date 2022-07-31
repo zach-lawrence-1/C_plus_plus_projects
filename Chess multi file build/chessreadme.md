@@ -10,5 +10,5 @@ be organizing my bigger projects in the future.
 
 **Running the project**
 
-As of now I can only upload the source code and not any build files so in order to run it, you need to make an empty c++ project and download the c++ files and put
-them in your project directory and compile it. In the future I will include build files so you can run it without having to make a new project.
+As of now I can only upload the source code so in order to run it, you need to download the c++ files and put them in your project directory and compile it. If you
+are using visual studio, make a new project and put the c++ files and header file in the project directory where needed and it should run.
