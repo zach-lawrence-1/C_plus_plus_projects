@@ -2,7 +2,6 @@
 #include<vector>
 #include<string>
 #include<fstream>
-#include<cstdio>
 
 //special variable, and replaces doing macros bc it is a precompiled constant
 //because it is processed before runtime, it is more efficient to your program
@@ -12229,16 +12228,7 @@ void saveSlot(std::string command)
 				std::cout << "cannot enter letter values" << std::endl;
 				return;
 			}
-			if (saveNum <= size && saveNum > 0)
-			{
-				fileName = saveFiles[saveNum - 1];
-			}
-			else
-			{
-				drawBoard();
-				std::cout << "saveslot number doesnt exist" << std::endl;
-				return;
-			}
+			
 			switch (newSave)
 			{
 				case 1:
@@ -12256,6 +12246,12 @@ void saveSlot(std::string command)
 					{
 						fileName = saveFiles[saveNum - 1];
 					}
+					else
+					{
+						drawBoard();
+						std::cout << "saveslot number doesnt exist" << std::endl;
+						return;
+					}
 					save(fileName);
 					break;
 				case 2:
@@ -12272,12 +12268,13 @@ void saveSlot(std::string command)
 						}
 					}
 					File.open("savefiles.txt", std::ios::app);
-					File << "\n" << fileName;
+					File << fileName << "\n";
 					File.close();
 					File.clear();
 					save(fileName);
 					break;
 				default:
+					drawBoard();
 					break;
 			}
 		}
