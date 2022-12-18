@@ -1,7 +1,9 @@
 #include"vars.h"
 
-void defaultLocations()
+//add pieces to associated vectors for later looping through objects
+void defaultVectors()
 {
+	//add references to black pieces in a vector
 	bPiece.push_back(&pawn1);
 	bPiece.push_back(&pawn2);
 	bPiece.push_back(&pawn3);
@@ -19,6 +21,7 @@ void defaultLocations()
 	bPiece.push_back(&queen);
 	bPiece.push_back(&king);
 
+	//add references to white pieces in a vector
 	wPiece.push_back(&wpawn1);
 	wPiece.push_back(&wpawn2);
 	wPiece.push_back(&wpawn3);
@@ -35,227 +38,9 @@ void defaultLocations()
 	wPiece.push_back(&whorse2);
 	wPiece.push_back(&wqueen);
 	wPiece.push_back(&wking);
-
-	//black auto placement
-	int a = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		if (i < 8)
-		{
-			bPiece[i]->piece = PAWN;
-			bPiece[i]->y = 6;
-			bPiece[i]->x = a;
-			a++;
-			//check for tile color and change background based on that
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackPawnCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mP\033[0m";
-			}
-		}
-		if (i > 7 && i < 10)
-		{
-			bPiece[i]->piece = ROOK;
-			bPiece[i]->y = 7;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackRookCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mR\033[0m";
-			}
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			bPiece[i]->piece = HORSE;
-			bPiece[i]->y = 7;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackHorseCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mH\033[0m";
-			}
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			bPiece[i]->piece = BISHOP;
-			bPiece[i]->y = 7;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackBishopCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mB\033[0m";
-			}
-		}
-		if (i == 14)
-		{
-			bPiece[i]->piece = QUEEN;
-			bPiece[i]->y = 7;
-			a = 4;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackQueenCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mQ\033[0m";
-			}
-		}
-		if (i == 15)
-		{
-			bPiece[i]->piece = KING;
-			bPiece[i]->y = 7;
-			a = 3;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackKingCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mK\033[0m";
-			}
-		}
-	}
-
-	//white auto placement
-	a = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		if (i < 8)
-		{
-			wPiece[i]->piece = PAWN;
-			wPiece[i]->y = 1;
-			wPiece[i]->x = a;
-			a++;
-
-			//check for tile color and change background based on that
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whitePawnCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mP\033[0m";
-			}
-		}
-		if (i > 7 && i < 10)
-		{
-			wPiece[i]->piece = ROOK;
-			wPiece[i]->y = 0;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteRookCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mR\033[0m";
-			}
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			wPiece[i]->piece = HORSE;
-			wPiece[i]->y = 0;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteHorseCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mH\033[0m";
-			}
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			wPiece[i]->piece = BISHOP;
-			wPiece[i]->y = 0;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteBishopCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mB\033[0m";
-			}
-		}
-		if (i == 14)
-		{
-			wPiece[i]->piece = QUEEN;
-			wPiece[i]->y = 0;
-			a = 4;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteQueenCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mQ\033[0m";
-			}
-		}
-		if (i == 15)
-		{
-			wPiece[i]->piece = KING;
-			wPiece[i]->y = 0;
-			a = 3;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteKingCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mK\033[0m";
-			}
-		}
-	}
 }
 
+//displays the current board
 void drawBoard()
 {
 	system("cls");
@@ -291,152 +76,117 @@ void drawBoard()
 //displays new piece position
 void col(int selecty, int selectx, int curry, int currx, int piece)
 {
-	if (tileColor[selecty][selectx] == "w")
+	if ((selectx % 2 == 0 && selecty % 2 == 0) || (selectx % 2 == 1 && selecty % 2 == 1))
 	{
 		board[selecty][selectx] = "\033[100;47;10m \033[0m";
 	}
-	if (tileColor[selecty][selectx] == "b")
+	else
 	{
 		board[selecty][selectx] = " ";
 	}
 
-	//black
 	switch (piece)
 	{
-		//pawn
-	case 1:
-		if (tileColor[curry][currx] == "w")
+		//black pieces
+	case PAWN:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackPawnCol;
+			board[curry][currx] = blackPawnCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mP\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mP\033[0m";
 		break;
-		//rook
-	case 2:
-		if (tileColor[curry][currx] == "w")
+	case ROOK:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackRookCol;
+			board[curry][currx] = blackRookCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mR\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mR\033[0m";
 		break;
-		//horse
-	case 3:
-		if (tileColor[curry][currx] == "w")
+	case BISHOP:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackHorseCol;
+			board[curry][currx] = blackBishopCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mH\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mB\033[0m";
 		break;
-		//bishop
-	case 4:
-		if (tileColor[curry][currx] == "w")
+	case HORSE:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackBishopCol;
+			board[curry][currx] = blackHorseCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mB\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mH\033[0m";
 		break;
-		//queen
-	case 5:
-		if (tileColor[curry][currx] == "w")
+	case QUEEN:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackQueenCol;
+			board[curry][currx] = blackQueenCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mQ\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mQ\033[0m";
 		break;
-		//king
-	case 6:
-		if (tileColor[curry][currx] == "w")
+	case KING:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackKingCol;
+			board[curry][currx] = blackKingCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mK\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mK\033[0m";
 		break;
 
-		//white
-
-		//pawn
-	case 7:
-		if (tileColor[curry][currx] == "w")
+		//white pieces
+	case PAWN + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whitePawnCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mP\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mP\033[0m";
 		break;
-		//rook
-	case 8:
-		if (tileColor[curry][currx] == "w")
+	case ROOK + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteRookCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mR\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mR\033[0m";
 		break;
-		//horse
-	case 9:
-		if (tileColor[curry][currx] == "w")
-		{
-			board[curry][currx] = whiteHorseCol;
-		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mH\033[0m";
-		}
-		break;
-		//bishop
-	case 10:
-		if (tileColor[curry][currx] == "w")
+	case BISHOP + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteBishopCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mB\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mB\033[0m";
 		break;
-		//queen
-	case 11:
-		if (tileColor[curry][currx] == "w")
+	case HORSE + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
+		{
+			board[curry][currx] = whiteHorseCol;
+			break;
+		}
+		board[curry][currx] = "\x1B[93mH\033[0m";
+		break;
+	case QUEEN + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteQueenCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mQ\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mQ\033[0m";
 		break;
-		//king
-	case 12:
-		if (tileColor[curry][currx] == "w")
+	case KING + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteKingCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mK\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mK\033[0m";
+		break;
+	default:
 		break;
 	}
 }
