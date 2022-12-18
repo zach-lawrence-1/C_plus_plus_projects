@@ -3,26 +3,23 @@
 #include<string>
 #include<fstream>
 
-//special variable, and replaces doing macros bc it is a precompiled constant
-//because it is processed before runtime, it is more efficient to your program
-constexpr int PAWN = 1;
-constexpr int ROOK = 2;
-constexpr int HORSE = 3;
-constexpr int BISHOP = 4;
-constexpr int QUEEN = 5;
-constexpr int KING = 6;
+//enum of consts for more readable code
+enum pieceType : const int
+{
+	PAWN = 1, ROOK, HORSE, BISHOP, QUEEN, KING
+};
 
 int turn = 0;
 int win = 0;
 int bDead = 0;
 int wDead = 0;
 
-std::string BlackPawnCol = "\033[100;47;30mP\033[0m";
-std::string BlackRookCol = "\033[100;47;30mR\033[0m";
-std::string BlackBishopCol = "\033[100;47;30mB\033[0m";
-std::string BlackHorseCol = "\033[100;47;30mH\033[0m";
-std::string BlackQueenCol = "\033[100;47;30mQ\033[0m";
-std::string BlackKingCol = "\033[100;47;30mK\033[0m";
+std::string blackPawnCol = "\033[100;47;30mP\033[0m";
+std::string blackRookCol = "\033[100;47;30mR\033[0m";
+std::string blackBishopCol = "\033[100;47;30mB\033[0m";
+std::string blackHorseCol = "\033[100;47;30mH\033[0m";
+std::string blackQueenCol = "\033[100;47;30mQ\033[0m";
+std::string blackKingCol = "\033[100;47;30mK\033[0m";
 
 std::string whitePawnCol = "\033[100;47;93mP\033[0m";
 std::string whiteRookCol = "\033[100;47;93mR\033[0m";
@@ -44,18 +41,6 @@ std::string board[8][12] = {
 	{" ", "\033[100;47;10m \033[0m", " ", "\033[100;47;10m \033[0m", " ", "\033[100;47;10m \033[0m", " ", "\033[100;47;10m \033[0m", " ", "\033[100;47;10m \033[0m", " ", "\033[100;47;10m \033[0m"}	  // row 8
 };
 
-//an array that stores color data of square
-std::string tileColor[8][12] = {
-	{"w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b"},
-	{"b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w"},
-	{"w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b"},
-	{"b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w"},
-	{"w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b"},
-	{"b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w"},
-	{"w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b"},
-	{"b", "w", "b", "w", "b", "w", "b", "w", "b", "w", "b", "w"},
-};
-
 class bPieces {
 public:
 	int death = 0;
@@ -63,8 +48,82 @@ public:
 	int x = 0;
 	int y = 0;
 	int check = 0;
-	int piece = 0;
+	int piece = 1;
 	int enPassantCnt = 0;
+
+	bPieces()
+	{}
+
+	void piecePlacement(int X, int Y, int typePiece)
+	{
+		x = X;
+		y = Y;
+		piece = typePiece;
+		death = 0;
+		movesMade = 0;
+		check = 0;
+		enPassantCnt = 0;
+		switch (typePiece)
+		{
+		case PAWN:
+			//displays white background with piece if both x and y are even coordinates because
+			//of the alternating pattern of the board
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackPawnCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mP\033[0m";
+			break;
+		case ROOK:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackRookCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mR\033[0m";
+			break;
+		case BISHOP:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackBishopCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mB\033[0m";
+			break;
+		case HORSE:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackHorseCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mH\033[0m";
+			break;
+		case QUEEN:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackQueenCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mQ\033[0m";
+			break;
+		case KING:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = blackKingCol;
+				break;
+			}
+			board[Y][X] = "\033[10;1;30mK\033[0m";
+			break;
+		default:
+			break;
+		}
+	}
+
+	bPieces(int X, int Y, int typePiece)
+	{
+		piecePlacement(X, Y, typePiece);
+	}
 
 	void dead(int numDead)
 	{
@@ -72,7 +131,7 @@ public:
 		{
 			if (numDead < 9)
 			{
-				if (tileColor[y][x] == "w")
+				if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 				{
 					board[y][x] = "\033[100;47;10m \033[0m";
 				}
@@ -86,41 +145,41 @@ public:
 				switch (piece)
 				{
 				case PAWN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackPawnCol;
+						board[y][x] = blackPawnCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mP\033[0m";
 					break;
 				case ROOK:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackRookCol;
+						board[y][x] = blackRookCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mR\033[0m";
 					break;
 				case HORSE:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackHorseCol;
+						board[y][x] = blackHorseCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mH\033[0m";
 					break;
 				case BISHOP:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackBishopCol;
+						board[y][x] = blackBishopCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mB\033[0m";
 					break;
 				case QUEEN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackQueenCol;
+						board[y][x] = blackQueenCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mQ\033[0m";
@@ -131,7 +190,7 @@ public:
 			}
 			if (numDead > 8)
 			{
-				if (tileColor[y][x] == "w")
+				if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 				{
 					board[y][x] = "\033[100;47;10m \033[0m";
 				}
@@ -145,41 +204,41 @@ public:
 				switch (piece)
 				{
 				case PAWN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackPawnCol;
+						board[y][x] = blackPawnCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mP\033[0m";
 					break;
 				case ROOK:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackRookCol;
+						board[y][x] = blackRookCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mR\033[0m";
 					break;
 				case HORSE:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackHorseCol;
+						board[y][x] = blackHorseCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mH\033[0m";
 					break;
 				case BISHOP:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackBishopCol;
+						board[y][x] = blackBishopCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mB\033[0m";
 					break;
 				case QUEEN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
-						board[y][x] = BlackQueenCol;
+						board[y][x] = blackQueenCol;
 						return;
 					}
 					board[y][x] = "\033[10;1;30mQ\033[0m";
@@ -191,7 +250,11 @@ public:
 		}
 	}
 };
-bPieces pawn1, pawn2, pawn3, pawn4, pawn5, pawn6, pawn7, pawn8, rook1, rook2, bishop1, bishop2, horse1, horse2, queen, king;
+
+bPieces pawn1(0, 6, PAWN), pawn2(1, 6, PAWN), pawn3(2, 6, PAWN), pawn4(3, 6, PAWN), pawn5(4, 6, PAWN), 
+pawn6(5, 6, PAWN), pawn7(6, 6, PAWN), pawn8(7, 6, PAWN), rook1(0, 7, ROOK), rook2(7, 7, ROOK), 
+bishop1(2, 7, BISHOP), bishop2(5, 7, BISHOP), horse1(1, 7, HORSE), horse2(6, 7, HORSE), queen(4, 7, QUEEN), 
+king(3, 7, KING);
 
 std::vector<bPieces*> bPiece;
 
@@ -202,8 +265,80 @@ public:
 	int x = 0;
 	int y = 0;
 	int check = 0;
-	int piece = 0;
+	int piece = 1;
 	int enPassantCnt = 0;
+
+	wPieces()
+	{}
+
+	void piecePlacement(int X, int Y, int typePiece)
+	{
+		x = X;
+		y = Y;
+		piece = typePiece;
+		death = 0;
+		movesMade = 0;
+		check = 0;
+		enPassantCnt = 0;
+		switch (typePiece)
+		{
+		case PAWN:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whitePawnCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mP\033[0m";
+			break;
+		case ROOK:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whiteRookCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mR\033[0m";
+			break;
+		case BISHOP:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whiteBishopCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mB\033[0m";
+			break;
+		case HORSE:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whiteHorseCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mH\033[0m";
+			break;
+		case QUEEN:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whiteQueenCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mQ\033[0m";
+			break;
+		case KING:
+			if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1))
+			{
+				board[Y][X] = whiteKingCol;
+				break;
+			}
+			board[Y][X] = "\x1B[93mK\033[0m";
+			break;
+		default:
+			break;
+		}
+	}
+
+	wPieces(int X, int Y, int typePiece)
+	{
+		piecePlacement(X, Y, typePiece);
+	}
 
 	void dead(int numDead)
 	{
@@ -212,7 +347,7 @@ public:
 		{
 			if (numDead < 9)
 			{
-				if (tileColor[y][x] == "w")
+				if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 				{
 					board[y][x] = "\033[100;47;10m \033[0m";
 				}
@@ -226,7 +361,7 @@ public:
 				switch (piece)
 				{
 				case PAWN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whitePawnCol;
 						return;
@@ -234,7 +369,7 @@ public:
 					board[y][x] = "\x1B[93mP\033[0m";
 					break;
 				case ROOK:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteRookCol;
 						return;
@@ -242,7 +377,7 @@ public:
 					board[y][x] = "\x1B[93mR\033[0m";
 					break;
 				case HORSE:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteHorseCol;
 						return;
@@ -250,7 +385,7 @@ public:
 					board[y][x] = "\x1B[93mH\033[0m";
 					break;
 				case BISHOP:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteBishopCol;
 						return;
@@ -258,7 +393,7 @@ public:
 					board[y][x] = "\x1B[93mB\033[0m";
 					break;
 				case QUEEN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteQueenCol;
 						return;
@@ -271,7 +406,7 @@ public:
 			}
 			if (numDead > 8)
 			{
-				if (tileColor[y][x] == "w")
+				if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 				{
 					board[y][x] = "\033[100;47;10m \033[0m";
 				}
@@ -285,7 +420,7 @@ public:
 				switch (piece)
 				{
 				case PAWN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whitePawnCol;
 						return;
@@ -293,7 +428,7 @@ public:
 					board[y][x] = "\x1B[93mP\033[0m";
 					break;
 				case ROOK:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteRookCol;
 						return;
@@ -301,7 +436,7 @@ public:
 					board[y][x] = "\x1B[93mR\033[0m";
 					break;
 				case HORSE:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteHorseCol;
 						return;
@@ -309,7 +444,7 @@ public:
 					board[y][x] = "\x1B[93mH\033[0m";
 					break;
 				case BISHOP:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteBishopCol;
 						return;
@@ -317,7 +452,7 @@ public:
 					board[y][x] = "\x1B[93mB\033[0m";
 					break;
 				case QUEEN:
-					if (tileColor[y][x] == "w")
+					if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1))
 					{
 						board[y][x] = whiteQueenCol;
 						return;
@@ -331,12 +466,18 @@ public:
 		}
 	}
 };
-wPieces wpawn1, wpawn2, wpawn3, wpawn4, wpawn5, wpawn6, wpawn7, wpawn8, wrook1, wrook2, wbishop1, wbishop2, whorse1, whorse2, wqueen, wking;
+
+wPieces wpawn1(0, 1, PAWN), wpawn2(1, 1, PAWN), wpawn3(2, 1, PAWN), wpawn4(3, 1, PAWN), wpawn5(4, 1, PAWN), 
+wpawn6(5, 1, PAWN), wpawn7(6, 1, PAWN), wpawn8(7, 1, PAWN), wrook1(0, 0, ROOK), wrook2(7, 0, ROOK),
+wbishop1(2, 0, BISHOP), wbishop2(5, 0, BISHOP), whorse1(1, 0, HORSE), whorse2(6, 0, HORSE), wqueen(4, 0, QUEEN),
+wking(3, 0, KING);
 
 std::vector<wPieces*> wPiece;
 
-void defaultLocations()
+//add pieces to associated vectors for later looping through objects
+void defaultVectors()
 {
+	//add references to black pieces in a vector
 	bPiece.push_back(&pawn1);
 	bPiece.push_back(&pawn2);
 	bPiece.push_back(&pawn3);
@@ -354,6 +495,7 @@ void defaultLocations()
 	bPiece.push_back(&queen);
 	bPiece.push_back(&king);
 
+	//add references to white pieces in a vector
 	wPiece.push_back(&wpawn1);
 	wPiece.push_back(&wpawn2);
 	wPiece.push_back(&wpawn3);
@@ -370,227 +512,9 @@ void defaultLocations()
 	wPiece.push_back(&whorse2);
 	wPiece.push_back(&wqueen);
 	wPiece.push_back(&wking);
-
-	//black auto placement
-	int a = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		if (i < 8)
-		{
-			bPiece[i]->piece = PAWN;
-			bPiece[i]->y = 6;
-			bPiece[i]->x = a;
-			a++;
-			//check for tile color and change background based on that
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackPawnCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mP\033[0m";
-			}
-		}
-		if (i > 7 && i < 10)
-		{
-			bPiece[i]->piece = ROOK;
-			bPiece[i]->y = 7;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackRookCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mR\033[0m";
-			}
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			bPiece[i]->piece = HORSE;
-			bPiece[i]->y = 7;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackHorseCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mH\033[0m";
-			}
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			bPiece[i]->piece = BISHOP;
-			bPiece[i]->y = 7;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackBishopCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mB\033[0m";
-			}
-		}
-		if (i == 14)
-		{
-			bPiece[i]->piece = QUEEN;
-			bPiece[i]->y = 7;
-			a = 4;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackQueenCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mQ\033[0m";
-			}
-		}
-		if (i == 15)
-		{
-			bPiece[i]->piece = KING;
-			bPiece[i]->y = 7;
-			a = 3;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackKingCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mK\033[0m";
-			}
-		}
-	}
-
-	//white auto placement
-	a = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		if (i < 8)
-		{
-			wPiece[i]->piece = PAWN;
-			wPiece[i]->y = 1;
-			wPiece[i]->x = a;
-			a++;
-
-			//check for tile color and change background based on that
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whitePawnCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mP\033[0m";
-			}
-		}
-		if (i > 7 && i < 10)
-		{
-			wPiece[i]->piece = ROOK;
-			wPiece[i]->y = 0;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteRookCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mR\033[0m";
-			}
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			wPiece[i]->piece = HORSE;
-			wPiece[i]->y = 0;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteHorseCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mH\033[0m";
-			}
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			wPiece[i]->piece = BISHOP;
-			wPiece[i]->y = 0;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteBishopCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mB\033[0m";
-			}
-		}
-		if (i == 14)
-		{
-			wPiece[i]->piece = QUEEN;
-			wPiece[i]->y = 0;
-			a = 4;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteQueenCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mQ\033[0m";
-			}
-		}
-		if (i == 15)
-		{
-			wPiece[i]->piece = KING;
-			wPiece[i]->y = 0;
-			a = 3;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteKingCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mK\033[0m";
-			}
-		}
-	}
 }
 
+//displays the current board
 void drawBoard()
 {
 	system("cls");
@@ -626,152 +550,117 @@ void drawBoard()
 //displays new piece position
 void col(int selecty, int selectx, int curry, int currx, int piece)
 {
-	if (tileColor[selecty][selectx] == "w")
+	if ((selectx % 2 == 0 && selecty % 2 == 0) || (selectx % 2 == 1 && selecty % 2 == 1))
 	{
 		board[selecty][selectx] = "\033[100;47;10m \033[0m";
 	}
-	if (tileColor[selecty][selectx] == "b")
+	else
 	{
 		board[selecty][selectx] = " ";
 	}
 
-	//black
 	switch (piece)
 	{
-		//pawn
-	case 1:
-		if (tileColor[curry][currx] == "w")
+	//black pieces
+	case PAWN:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackPawnCol;
+			board[curry][currx] = blackPawnCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mP\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mP\033[0m";
 		break;
-		//rook
-	case 2:
-		if (tileColor[curry][currx] == "w")
+	case ROOK:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackRookCol;
+			board[curry][currx] = blackRookCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mR\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mR\033[0m";
 		break;
-		//horse
-	case 3:
-		if (tileColor[curry][currx] == "w")
+	case BISHOP:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackHorseCol;
+			board[curry][currx] = blackBishopCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mH\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mB\033[0m";
 		break;
-		//bishop
-	case 4:
-		if (tileColor[curry][currx] == "w")
+	case HORSE:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackBishopCol;
+			board[curry][currx] = blackHorseCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mB\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mH\033[0m";
 		break;
-		//queen
-	case 5:
-		if (tileColor[curry][currx] == "w")
+	case QUEEN:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackQueenCol;
+			board[curry][currx] = blackQueenCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mQ\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mQ\033[0m";
 		break;
-		//king
-	case 6:
-		if (tileColor[curry][currx] == "w")
+	case KING:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
-			board[curry][currx] = BlackKingCol;
+			board[curry][currx] = blackKingCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\033[10;1;30mK\033[0m";
-		}
+		board[curry][currx] = "\033[10;1;30mK\033[0m";
 		break;
-		
-		//white
-		
-		//pawn
-	case 7:
-		if (tileColor[curry][currx] == "w")
+
+	//white pieces
+	case PAWN + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whitePawnCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mP\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mP\033[0m";
 		break;
-		//rook
-	case 8:
-		if (tileColor[curry][currx] == "w")
+	case ROOK + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteRookCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mR\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mR\033[0m";
 		break;
-		//horse
-	case 9:
-		if (tileColor[curry][currx] == "w")
-		{
-			board[curry][currx] = whiteHorseCol;
-		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mH\033[0m";
-		}
-		break;
-		//bishop
-	case 10:
-		if (tileColor[curry][currx] == "w")
+	case BISHOP + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteBishopCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mB\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mB\033[0m";
 		break;
-		//queen
-	case 11:
-		if (tileColor[curry][currx] == "w")
+	case HORSE + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
+		{
+			board[curry][currx] = whiteHorseCol;
+			break;
+		}
+		board[curry][currx] = "\x1B[93mH\033[0m";
+		break;
+	case QUEEN + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteQueenCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mQ\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mQ\033[0m";
 		break;
-		//king
-	case 12:
-		if (tileColor[curry][currx] == "w")
+	case KING + 6:
+		if ((currx % 2 == 0 && curry % 2 == 0) || (currx % 2 == 1 && curry % 2 == 1))
 		{
 			board[curry][currx] = whiteKingCol;
+			break;
 		}
-		if (tileColor[curry][currx] == "b")
-		{
-			board[curry][currx] = "\x1B[93mK\033[0m";
-		}
+		board[curry][currx] = "\x1B[93mK\033[0m";
+		break;
+	default:
 		break;
 	}
 }
@@ -11517,251 +11406,96 @@ void stalemate()
 //restarts the game
 void newGame()
 {
-	//black auto placement
-	int a = 0;
 	int px = 0;
 	int py = 0;
 	turn = 0;
-
+	bDead = 0;
+	wDead = 0;
+	//empty out current taken locations
 	for (int i = 0; i < 16; i++)
 	{
 		px = bPiece[i]->x;
 		py = bPiece[i]->y;
-		bPiece[i]->death = 0;
-		bPiece[i]->movesMade = 0;
-		bPiece[i]->check = 0;
-		bPiece[i]->enPassantCnt = 0;
-		if (i < 8)
+		if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
 		{
-			bPiece[i]->piece = PAWN;
-			bPiece[i]->y = 6;
-			bPiece[i]->x = a;
-			a++;
-			//check for tile color and change background based on that
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackPawnCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mP\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
+			board[py][px] = "\033[100;47;10m \033[0m";
+			continue;
 		}
-		if (i > 7 && i < 10)
-		{
-			px = bPiece[i]->x;
-			py = bPiece[i]->y;
-			bPiece[i]->piece = ROOK;
-			bPiece[i]->y = 7;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackRookCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mR\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			bPiece[i]->piece = HORSE;
-			bPiece[i]->y = 7;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackHorseCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mH\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			bPiece[i]->piece = BISHOP;
-			bPiece[i]->y = 7;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackBishopCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mB\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i == 14)
-		{
-			bPiece[i]->piece = QUEEN;
-			bPiece[i]->y = 7;
-			a = 4;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackQueenCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mQ\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i == 15)
-		{
-			bPiece[i]->piece = KING;
-			bPiece[i]->y = 7;
-			a = 3;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackKingCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mK\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
+		board[py][px] = " ";
 	}
-	//white auto placement
-	a = 0;
 	for (int i = 0; i < 16; i++)
 	{
 		px = wPiece[i]->x;
 		py = wPiece[i]->y;
-		wPiece[i]->death = 0;
-		wPiece[i]->movesMade = 0;
-		wPiece[i]->check = 0;
-		wPiece[i]->enPassantCnt = 0;
+		if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+		{
+			board[py][px] = "\033[100;47;10m \033[0m";
+			continue;
+		}
+		board[py][px] = " ";
+	}
+
+	//reset black and white pieces
+	for (int i = 0; i < 16; i++)
+	{
 		if (i < 8)
 		{
+			bPiece[i]->piece = PAWN;
 			wPiece[i]->piece = PAWN;
-			wPiece[i]->y = 1;
-			wPiece[i]->x = a;
-			a++;
-
-			//check for tile color and change background based on that
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whitePawnCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mP\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
+			bPiece[i]->piecePlacement(i, 6, PAWN);
+			wPiece[i]->piecePlacement(i, 1, PAWN);
 		}
-		if (i > 7 && i < 10)
+		else if (i < 10)
 		{
-			wPiece[i]->piece = ROOK;
-			wPiece[i]->y = 0;
-			a = 0;
-			if (i == 9)
+			if (i == 8)
 			{
-				a = 7;
+				bPiece[i]->piecePlacement(0, 7, ROOK);
+				wPiece[i]->piecePlacement(0, 0, ROOK);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteRookCol;
+				bPiece[i]->piecePlacement(7, 7, ROOK);
+				wPiece[i]->piecePlacement(7, 0, ROOK);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mR\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i > 9 && i < 12)
+		else if (i < 12)
 		{
-			a = 1;
-			wPiece[i]->piece = HORSE;
-			wPiece[i]->y = 0;
-			if (i == 11)
+			if (i == 10)
 			{
-				a = 6;
+				bPiece[i]->piecePlacement(2, 7, BISHOP);
+				wPiece[i]->piecePlacement(2, 0, BISHOP);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteHorseCol;
+				bPiece[i]->piecePlacement(5, 7, BISHOP);
+				wPiece[i]->piecePlacement(5, 0, BISHOP);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mH\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i > 11 && i < 14)
+		else if (i < 14)
 		{
-			a = 2;
-			wPiece[i]->piece = BISHOP;
-			wPiece[i]->y = 0;
-			if (i == 13)
+			if (i == 12)
 			{
-				a = 5;
+				bPiece[i]->piecePlacement(1, 7, HORSE);
+				wPiece[i]->piecePlacement(1, 0, HORSE);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteBishopCol;
+				bPiece[i]->piecePlacement(6, 7, HORSE);
+				wPiece[i]->piecePlacement(6, 0, HORSE);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mB\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i == 14)
+		else
 		{
-			wPiece[i]->piece = QUEEN;
-			wPiece[i]->y = 0;
-			a = 4;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			if (i == 14)
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteQueenCol;
+				bPiece[i]->piecePlacement(4, 7, QUEEN);
+				wPiece[i]->piecePlacement(4, 0, QUEEN);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mQ\033[0m";
+				bPiece[i]->piecePlacement(3, 7, KING);
+				wPiece[i]->piecePlacement(3, 0, KING);
 			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
-		}
-		if (i == 15)
-		{
-			wPiece[i]->piece = KING;
-			wPiece[i]->y = 0;
-			a = 3;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteKingCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mK\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
 	}
 	drawBoard();
@@ -11786,11 +11520,11 @@ void save(std::string file)
 	{
 		for (auto& b : bPiece)
 		{
-			File << std::to_string(b->death).length() << b->death << std::to_string(b->movesMade).length() << b->movesMade << std::to_string(b->x).length() << b->x << std::to_string(b->y).length() << b->y << std::to_string(b->check).length() << b->check << std::to_string(b->piece).length() << b->piece << std::to_string(b->enPassantCnt).length() << b->enPassantCnt << std::to_string(win).length() << win << std::to_string(bDead).length() << bDead << std::to_string(wDead).length() << wDead << std::to_string(turn).length() << turn << "\n";
+			File << b->death << std::to_string(b->movesMade).length() << b->movesMade << std::to_string(b->x).length() << b->x << std::to_string(b->y).length() << b->y << std::to_string(b->check).length() << b->check << std::to_string(b->piece).length() << b->piece << std::to_string(b->enPassantCnt).length() << b->enPassantCnt << std::to_string(win).length() << win << std::to_string(turn).length() << turn << "\n";
 		}
 		for (auto& w : wPiece)
 		{
-			File << std::to_string(w->death).length() << w->death << std::to_string(w->movesMade).length() << w->movesMade << std::to_string(w->x).length() << w->x << std::to_string(w->y).length() << w->y << std::to_string(w->check).length() << w->check << std::to_string(w->piece).length() << w->piece << std::to_string(w->enPassantCnt).length() << w->enPassantCnt << std::to_string(win).length() << win << std::to_string(bDead).length() << bDead << std::to_string(wDead).length() << wDead << std::to_string(turn).length() << turn << "\n";
+			File << w->death << std::to_string(w->movesMade).length() << w->movesMade << std::to_string(w->x).length() << w->x << std::to_string(w->y).length() << w->y << std::to_string(w->check).length() << w->check << std::to_string(w->piece).length() << w->piece << std::to_string(w->enPassantCnt).length() << w->enPassantCnt << std::to_string(win).length() << win << std::to_string(turn).length() << turn << "\n";
 		}
 		File.close();
 		File.clear();
@@ -11802,6 +11536,8 @@ void save(std::string file)
 //loads previously saved game
 void load(std::string file)
 {
+	bDead = 0;
+	wDead = 0;
 	int px = 0;
 	int py = 0;
 	std::string p = "";
@@ -11810,6 +11546,8 @@ void load(std::string file)
 	int cnt = 0;
 	std::fstream File;
 	std::string line = "";
+	int ff = 0;
+
 	File.open(file, std::ios::in);
 	if (File.fail())
 	{
@@ -11820,29 +11558,133 @@ void load(std::string file)
 	}
 	if (File.is_open())
 	{
-		int ff = 0;
+		//empty out current taken locations to prevent graphical errors from pieces
+		for (int i = 0; i < 16; i++)
+		{
+			px = bPiece[i]->x;
+			py = bPiece[i]->y;
+			if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+			{
+				board[py][px] = "\033[100;47;10m \033[0m";
+				continue;
+			}
+			board[py][px] = " ";
+		}
+
+		for (int i = 0; i < 16; i++)
+		{
+			px = wPiece[i]->x;
+			py = wPiece[i]->y;
+			if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+			{
+				board[py][px] = "\033[100;47;10m \033[0m";
+				continue;
+			}
+			board[py][px] = " ";
+		}
+
+		//kill all dead pieces before placing new pieces
 		for (auto& b : bPiece)
 		{
-			px = b->x;
-			py = b->y;
+			cnt = 1;
 			if (ff < 16)
-			{
 				getline(File, line);
-			}
 			else
-			{
 				break;
-			}
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
+			//after 5 of these, it hits piece type
+			for (int i = 0; i < 5; i++)
 			{
 				p = line[cnt];
-				app.append(p);
+				size = std::stoi(p);
 				cnt++;
+				for (int j = 0; j < size; j++)
+				{
+					p = line[cnt];
+					app.append(p);
+					cnt++;
+				}
+				if (i == 4)
+				{
+					b->piece = std::stoi(app);
+				}
+				app = "";
 			}
+
+			if (line[0] == '1')
+			{
+				b->death = 1;
+				bDead++;
+				b->dead(bDead);
+			}
+			ff++;
+		}
+
+		for (auto& w : wPiece)
+		{
+			cnt = 1;
+			if (ff < 32)
+				getline(File, line);
+			else
+				break;
+			//after 5 of these, it hits piece type
+			for (int i = 0; i < 5; i++)
+			{
+				p = line[cnt];
+				size = std::stoi(p);
+				cnt++;
+				for (int j = 0; j < size; j++)
+				{
+					p = line[cnt];
+					app.append(p);
+					cnt++;
+				}
+				if (i == 4)
+				{
+					w->piece = std::stoi(app);
+				}
+				app = "";
+			}
+			
+			if (line[0] == '1')
+			{
+				w->death = 1;
+				wDead++;
+				w->dead(wDead);
+			}
+			ff++;
+		}
+	}
+
+	File.close();
+	File.clear();
+	File.open(file, std::ios::in);
+	if (File.fail())
+	{
+		File.close();
+		File.clear();
+		drawBoard();
+		std::cout << "file cannot be opened " << std::endl;
+	}
+	if (File.is_open())
+	{
+		px = 0;
+		py = 0;
+		ff = 0;
+
+		for (auto& b : bPiece)
+		{
+			cnt = 1;
+			px = b->x;
+			py = b->y;
+			app = "";
+
+			if (ff < 16)
+				getline(File, line);
+			else
+				break;
+			
+			p = line[0];
+			app = p;
 			b->death = std::stoi(app);
 			app = "";
 
@@ -11939,64 +11781,29 @@ void load(std::string file)
 				app.append(p);
 				cnt++;
 			}
-			bDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
-			wDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
 			turn = std::stoi(app);
 			app = "";
-			cnt = 0;
-
-			if (px != b->x || py != b->y)
+			if (b->death == 0)
 			{
 				col(py, px, b->y, b->x, b->piece);
 			}
 			ff++;
 		}
+
 		for (auto& w : wPiece)
 		{
 			px = w->x;
 			py = w->y;
-			cnt = 0;
+			cnt = 1;
 			app = "";
 
 			if (ff < 32)
-			{
 				getline(File, line);
-			}
 			else
-			{
 				break;
-			}
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
+			
+			p = line[0];
+			app = p;
 			w->death = std::stoi(app);
 			app = "";
 
@@ -12093,34 +11900,11 @@ void load(std::string file)
 				app.append(p);
 				cnt++;
 			}
-			bDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
-			wDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
 			turn = std::stoi(app);
 			app = "";
 			cnt = 0;
-			if (px != w->x || py != w->y)
+
+			if (w->death == 0)
 			{
 				col(py, px, w->y, w->x, w->piece + 6);
 			}
@@ -12274,7 +12058,6 @@ void saveSlot(std::string command)
 					save(fileName);
 					break;
 				default:
-					drawBoard();
 					break;
 			}
 		}
@@ -14224,7 +14007,7 @@ void wMove()
 
 int main()
 {
-	defaultLocations();
+	defaultVectors();
 	drawBoard();
 
 	while (true)
@@ -14235,7 +14018,7 @@ int main()
 			{
 				bMove();
 			}
-			if (turn == 1)
+			else
 			{
 				wMove();
 			}
