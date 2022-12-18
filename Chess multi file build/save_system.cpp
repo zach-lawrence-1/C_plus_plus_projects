@@ -4,251 +4,96 @@
 //restarts the game
 void newGame()
 {
-	//black auto placement
-	int a = 0;
 	int px = 0;
 	int py = 0;
 	turn = 0;
-
+	bDead = 0;
+	wDead = 0;
+	//empty out current taken locations
 	for (int i = 0; i < 16; i++)
 	{
 		px = bPiece[i]->x;
 		py = bPiece[i]->y;
-		bPiece[i]->death = 0;
-		bPiece[i]->movesMade = 0;
-		bPiece[i]->check = 0;
-		bPiece[i]->enPassantCnt = 0;
-		if (i < 8)
+		if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
 		{
-			bPiece[i]->piece = PAWN;
-			bPiece[i]->y = 6;
-			bPiece[i]->x = a;
-			a++;
-			//check for tile color and change background based on that
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackPawnCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mP\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
+			board[py][px] = "\033[100;47;10m \033[0m";
+			continue;
 		}
-		if (i > 7 && i < 10)
-		{
-			px = bPiece[i]->x;
-			py = bPiece[i]->y;
-			bPiece[i]->piece = ROOK;
-			bPiece[i]->y = 7;
-			a = 0;
-			if (i == 9)
-			{
-				a = 7;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackRookCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mR\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i > 9 && i < 12)
-		{
-			a = 1;
-			bPiece[i]->piece = HORSE;
-			bPiece[i]->y = 7;
-			if (i == 11)
-			{
-				a = 6;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackHorseCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mH\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i > 11 && i < 14)
-		{
-			a = 2;
-			bPiece[i]->piece = BISHOP;
-			bPiece[i]->y = 7;
-			if (i == 13)
-			{
-				a = 5;
-			}
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackBishopCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mB\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i == 14)
-		{
-			bPiece[i]->piece = QUEEN;
-			bPiece[i]->y = 7;
-			a = 4;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackQueenCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mQ\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
-		if (i == 15)
-		{
-			bPiece[i]->piece = KING;
-			bPiece[i]->y = 7;
-			a = 3;
-			bPiece[i]->x = a;
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "w")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = BlackKingCol;
-			}
-			if (tileColor[bPiece[i]->y][bPiece[i]->x] == "b")
-			{
-				board[bPiece[i]->y][bPiece[i]->x] = "\033[10;1;30mK\033[0m";
-			}
-			col(py, px, bPiece[i]->y, bPiece[i]->x, bPiece[i]->piece);
-		}
+		board[py][px] = " ";
 	}
-	//white auto placement
-	a = 0;
 	for (int i = 0; i < 16; i++)
 	{
 		px = wPiece[i]->x;
 		py = wPiece[i]->y;
-		wPiece[i]->death = 0;
-		wPiece[i]->movesMade = 0;
-		wPiece[i]->check = 0;
-		wPiece[i]->enPassantCnt = 0;
+		if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+		{
+			board[py][px] = "\033[100;47;10m \033[0m";
+			continue;
+		}
+		board[py][px] = " ";
+	}
+
+	//reset black and white pieces
+	for (int i = 0; i < 16; i++)
+	{
 		if (i < 8)
 		{
+			bPiece[i]->piece = PAWN;
 			wPiece[i]->piece = PAWN;
-			wPiece[i]->y = 1;
-			wPiece[i]->x = a;
-			a++;
-
-			//check for tile color and change background based on that
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whitePawnCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mP\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
+			bPiece[i]->piecePlacement(i, 6, PAWN);
+			wPiece[i]->piecePlacement(i, 1, PAWN);
 		}
-		if (i > 7 && i < 10)
+		else if (i < 10)
 		{
-			wPiece[i]->piece = ROOK;
-			wPiece[i]->y = 0;
-			a = 0;
-			if (i == 9)
+			if (i == 8)
 			{
-				a = 7;
+				bPiece[i]->piecePlacement(0, 7, ROOK);
+				wPiece[i]->piecePlacement(0, 0, ROOK);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteRookCol;
+				bPiece[i]->piecePlacement(7, 7, ROOK);
+				wPiece[i]->piecePlacement(7, 0, ROOK);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mR\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i > 9 && i < 12)
+		else if (i < 12)
 		{
-			a = 1;
-			wPiece[i]->piece = HORSE;
-			wPiece[i]->y = 0;
-			if (i == 11)
+			if (i == 10)
 			{
-				a = 6;
+				bPiece[i]->piecePlacement(2, 7, BISHOP);
+				wPiece[i]->piecePlacement(2, 0, BISHOP);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteHorseCol;
+				bPiece[i]->piecePlacement(5, 7, BISHOP);
+				wPiece[i]->piecePlacement(5, 0, BISHOP);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mH\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i > 11 && i < 14)
+		else if (i < 14)
 		{
-			a = 2;
-			wPiece[i]->piece = BISHOP;
-			wPiece[i]->y = 0;
-			if (i == 13)
+			if (i == 12)
 			{
-				a = 5;
+				bPiece[i]->piecePlacement(1, 7, HORSE);
+				wPiece[i]->piecePlacement(1, 0, HORSE);
 			}
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteBishopCol;
+				bPiece[i]->piecePlacement(6, 7, HORSE);
+				wPiece[i]->piecePlacement(6, 0, HORSE);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mB\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
-		if (i == 14)
+		else
 		{
-			wPiece[i]->piece = QUEEN;
-			wPiece[i]->y = 0;
-			a = 4;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
+			if (i == 14)
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteQueenCol;
+				bPiece[i]->piecePlacement(4, 7, QUEEN);
+				wPiece[i]->piecePlacement(4, 0, QUEEN);
 			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
+			else
 			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mQ\033[0m";
+				bPiece[i]->piecePlacement(3, 7, KING);
+				wPiece[i]->piecePlacement(3, 0, KING);
 			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
-		}
-		if (i == 15)
-		{
-			wPiece[i]->piece = KING;
-			wPiece[i]->y = 0;
-			a = 3;
-			wPiece[i]->x = a;
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "w")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = whiteKingCol;
-			}
-			if (tileColor[wPiece[i]->y][wPiece[i]->x] == "b")
-			{
-				board[wPiece[i]->y][wPiece[i]->x] = "\x1B[93mK\033[0m";
-			}
-			col(py, px, wPiece[i]->y, wPiece[i]->x, wPiece[i]->piece + 6);
 		}
 	}
 	drawBoard();
@@ -273,11 +118,11 @@ void save(std::string file)
 	{
 		for (auto& b : bPiece)
 		{
-			File << std::to_string(b->death).length() << b->death << std::to_string(b->movesMade).length() << b->movesMade << std::to_string(b->x).length() << b->x << std::to_string(b->y).length() << b->y << std::to_string(b->check).length() << b->check << std::to_string(b->piece).length() << b->piece << std::to_string(b->enPassantCnt).length() << b->enPassantCnt << std::to_string(win).length() << win << std::to_string(bDead).length() << bDead << std::to_string(wDead).length() << wDead << std::to_string(turn).length() << turn << "\n";
+			File << b->death << std::to_string(b->movesMade).length() << b->movesMade << std::to_string(b->x).length() << b->x << std::to_string(b->y).length() << b->y << std::to_string(b->check).length() << b->check << std::to_string(b->piece).length() << b->piece << std::to_string(b->enPassantCnt).length() << b->enPassantCnt << std::to_string(win).length() << win << std::to_string(turn).length() << turn << "\n";
 		}
 		for (auto& w : wPiece)
 		{
-			File << std::to_string(w->death).length() << w->death << std::to_string(w->movesMade).length() << w->movesMade << std::to_string(w->x).length() << w->x << std::to_string(w->y).length() << w->y << std::to_string(w->check).length() << w->check << std::to_string(w->piece).length() << w->piece << std::to_string(w->enPassantCnt).length() << w->enPassantCnt << std::to_string(win).length() << win << std::to_string(bDead).length() << bDead << std::to_string(wDead).length() << wDead << std::to_string(turn).length() << turn << "\n";
+			File << w->death << std::to_string(w->movesMade).length() << w->movesMade << std::to_string(w->x).length() << w->x << std::to_string(w->y).length() << w->y << std::to_string(w->check).length() << w->check << std::to_string(w->piece).length() << w->piece << std::to_string(w->enPassantCnt).length() << w->enPassantCnt << std::to_string(win).length() << win << std::to_string(turn).length() << turn << "\n";
 		}
 		File.close();
 		File.clear();
@@ -289,6 +134,8 @@ void save(std::string file)
 //loads previously saved game
 void load(std::string file)
 {
+	bDead = 0;
+	wDead = 0;
 	int px = 0;
 	int py = 0;
 	std::string p = "";
@@ -297,6 +144,8 @@ void load(std::string file)
 	int cnt = 0;
 	std::fstream File;
 	std::string line = "";
+	int ff = 0;
+
 	File.open(file, std::ios::in);
 	if (File.fail())
 	{
@@ -307,29 +156,133 @@ void load(std::string file)
 	}
 	if (File.is_open())
 	{
-		int ff = 0;
+		//empty out current taken locations to prevent graphical errors from pieces
+		for (int i = 0; i < 16; i++)
+		{
+			px = bPiece[i]->x;
+			py = bPiece[i]->y;
+			if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+			{
+				board[py][px] = "\033[100;47;10m \033[0m";
+				continue;
+			}
+			board[py][px] = " ";
+		}
+
+		for (int i = 0; i < 16; i++)
+		{
+			px = wPiece[i]->x;
+			py = wPiece[i]->y;
+			if ((px % 2 == 0 && py % 2 == 0) || (px % 2 == 1 && py % 2 == 1))
+			{
+				board[py][px] = "\033[100;47;10m \033[0m";
+				continue;
+			}
+			board[py][px] = " ";
+		}
+
+		//kill all dead pieces before placing new pieces
 		for (auto& b : bPiece)
 		{
-			px = b->x;
-			py = b->y;
+			cnt = 1;
 			if (ff < 16)
-			{
 				getline(File, line);
-			}
 			else
-			{
 				break;
-			}
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
+			//after 5 of these, it hits piece type
+			for (int i = 0; i < 5; i++)
 			{
 				p = line[cnt];
-				app.append(p);
+				size = std::stoi(p);
 				cnt++;
+				for (int j = 0; j < size; j++)
+				{
+					p = line[cnt];
+					app.append(p);
+					cnt++;
+				}
+				if (i == 4)
+				{
+					b->piece = std::stoi(app);
+				}
+				app = "";
 			}
+
+			if (line[0] == '1')
+			{
+				b->death = 1;
+				bDead++;
+				b->dead(bDead);
+			}
+			ff++;
+		}
+
+		for (auto& w : wPiece)
+		{
+			cnt = 1;
+			if (ff < 32)
+				getline(File, line);
+			else
+				break;
+			//after 5 of these, it hits piece type
+			for (int i = 0; i < 5; i++)
+			{
+				p = line[cnt];
+				size = std::stoi(p);
+				cnt++;
+				for (int j = 0; j < size; j++)
+				{
+					p = line[cnt];
+					app.append(p);
+					cnt++;
+				}
+				if (i == 4)
+				{
+					w->piece = std::stoi(app);
+				}
+				app = "";
+			}
+
+			if (line[0] == '1')
+			{
+				w->death = 1;
+				wDead++;
+				w->dead(wDead);
+			}
+			ff++;
+		}
+	}
+
+	File.close();
+	File.clear();
+	File.open(file, std::ios::in);
+	if (File.fail())
+	{
+		File.close();
+		File.clear();
+		drawBoard();
+		std::cout << "file cannot be opened " << std::endl;
+	}
+	if (File.is_open())
+	{
+		px = 0;
+		py = 0;
+		ff = 0;
+
+		for (auto& b : bPiece)
+		{
+			cnt = 1;
+			px = b->x;
+			py = b->y;
+			app = "";
+
+			if (ff < 16)
+				getline(File, line);
+			else
+				break;
+
+			p = line[0];
+			app = p;
 			b->death = std::stoi(app);
 			app = "";
 
@@ -426,64 +379,29 @@ void load(std::string file)
 				app.append(p);
 				cnt++;
 			}
-			bDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
-			wDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
 			turn = std::stoi(app);
 			app = "";
-			cnt = 0;
-
-			if (px != b->x || py != b->y)
+			if (b->death == 0)
 			{
 				col(py, px, b->y, b->x, b->piece);
 			}
 			ff++;
 		}
+
 		for (auto& w : wPiece)
 		{
 			px = w->x;
 			py = w->y;
-			cnt = 0;
+			cnt = 1;
 			app = "";
 
 			if (ff < 32)
-			{
 				getline(File, line);
-			}
 			else
-			{
 				break;
-			}
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
+
+			p = line[0];
+			app = p;
 			w->death = std::stoi(app);
 			app = "";
 
@@ -580,34 +498,11 @@ void load(std::string file)
 				app.append(p);
 				cnt++;
 			}
-			bDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
-			wDead = std::stoi(app);
-			app = "";
-
-			p = line[cnt];
-			size = std::stoi(p);
-			cnt++;
-			for (int i = 0; i < size; i++)
-			{
-				p = line[cnt];
-				app.append(p);
-				cnt++;
-			}
 			turn = std::stoi(app);
 			app = "";
 			cnt = 0;
-			if (px != w->x || py != w->y)
+
+			if (w->death == 0)
 			{
 				col(py, px, w->y, w->x, w->piece + 6);
 			}
@@ -761,7 +656,6 @@ void saveSlot(std::string command)
 				save(fileName);
 				break;
 			default:
-				drawBoard();
 				break;
 			}
 		}
