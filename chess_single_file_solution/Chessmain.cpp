@@ -342,7 +342,6 @@ public:
 
 	void dead(int numDead)
 	{
-		//edit for white pieces
 		if (death == 1)
 		{
 			if (numDead < 9)
