@@ -1,12 +1,8 @@
 #include <iostream>
-#include <conio.h>
 #include <windows.h>
-#include "C://colorwin-master/src/colorwin.hpp"
-using namespace colorwin;
-// to use colors do the path of colorwin.hpp and add using namespace colorwin;
+
 using namespace std;
-bool gameOver;
-const int ESC = 27;
+bool gameOver = false;
 const int Width = 63;
 const int Height = 13;
 int X, Y, fruitX, fruitY, score;
@@ -14,6 +10,7 @@ int tailX[100], tailY[100];
 int nTail;
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN };
 eDirecton dir;
+
 void Setup()
 {
 	gameOver = false;
@@ -24,27 +21,34 @@ void Setup()
 	fruitY = rand() % Height;
 	score = 0;
 }
+
 //clears the screen without flickering
 void ClearScreen()
 {
-	COORD cursorPosition;	cursorPosition.X = 0;	cursorPosition.Y = 0;	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+	COORD cursorPosition;
+	cursorPosition.X = 0;
+	cursorPosition.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
+
 void Draw()
 {
 	//clears the console
 	ClearScreen();
 	cout << endl;
-	cout << color(green) << " _______________________________________________________________" << endl;
-	cout << color(green) << "| _____________________________________________________________ |" << endl;
-	cout << color(green) << "||     _____    __    __      ____      __   ___    _____      ||   " << endl;
-	cout << color(green) << "||    |   __|  |  \\  |  |    / __ \\    |  | /  /   |   __|     ||  " << endl;
-	cout << color(green) << "||    |  |__   |   \\ |  |   / |__| \\   |  |/  /    |  |__      || " << endl;
-	cout << color(green) << "||    |__   |  |  \\ \\|  |  |   __   |  |     |     |   __|     ||" << endl;
-	cout << color(green) << "||     __|  |  |  |\\    |  |  /  \\  |  |  |\\  \\    |  |__      ||" << endl;
-	cout << color(green) << "||    |_____|  |__| \\___|  |_|    |_|  |__| \\__\\   |_____|     ||" << endl;
-	cout << color(green) << "||_____________________________________________________________||" << endl;
-	cout << color(green) << "|_______________________________________________________________|" << endl;
+	//using ansi escape codes for coloring
+	cout << "\033[0;32;40m _______________________________________________________________\033[0m" << endl;
+	cout << "\033[0;32;40m| _____________________________________________________________ |\033[0m" << endl;
+	cout << "\033[0;32;40m||     _____    __    __      ____      __   ___    _____      ||   \033[0m" << endl;
+	cout << "\033[0;32;40m||    |   __|  |  \\  |  |    / __ \\    |  | /  /   |   __|     ||  \033[0m" << endl;
+	cout << "\033[0;32;40m||    |  |__   |   \\ |  |   / |__| \\   |  |/  /    |  |__      || \033[0m" << endl;
+	cout << "\033[0;32;40m||    |__   |  |  \\ \\|  |  |   __   |  |     |     |   __|     ||\033[0m" << endl;
+	cout << "\033[0;32;40m||     __|  |  |  |\\    |  |  /  \\  |  |  |\\  \\    |  |__      ||\033[0m" << endl;
+	cout << "\033[0;32;40m||    |_____|  |__| \\___|  |_|    |_|  |__| \\__\\   |_____|     ||\033[0m" << endl;
+	cout << "\033[0;32;40m||_____________________________________________________________||\033[0m" << endl;
+	cout << "\033[0;32;40m|_______________________________________________________________|\033[0m" << endl;
 	cout << endl;
+
 	for (int i = 0; i < Width + 2; i++)
 		cout << "#";
 	cout << endl;
@@ -56,10 +60,10 @@ void Draw()
 			if (j == 0)
 				cout << "#";
 			if (i == Y && j == X)
-				cout << color(green) << "O";
+				cout << "\033[0;32;40mO\033[0m";
 			else if (i == fruitY && j == fruitX)
 			{
-				cout << color(red) << "O";
+				cout << "\033[0;31;40mO\033[0m";
 			}
 			else
 			{
@@ -68,7 +72,7 @@ void Draw()
 				{
 					if (tailX[k] == j && tailY[k] == i)
 					{
-						cout << color(green) << "o";
+						cout << "\033[0;32;40mo\033[0m";
 						print = true;
 					}
 				}
@@ -88,30 +92,28 @@ void Draw()
 	cout << endl;
 	cout << "Score:" << score << endl;
 }
+
 void Input()
 {
-	if (_kbhit())
+	//key is pressed
+	if (GetKeyState('W') < 0)
 	{
-		switch (_getch())
-		{
-		case 'a':
-			dir = LEFT;
-			break;
-		case 'd':
-			dir = RIGHT;
-			break;
-		case 'w':
-			dir = UP;
-			break;
-		case 's':
-			dir = DOWN;
-			break;
-		case 'ESC':
-			gameOver = true;
-			break;
-		}
+		dir = UP;
+	}
+	else if (GetKeyState('A') < 0)
+	{
+		dir = LEFT;
+	}
+	else if (GetKeyState('S') < 0)
+	{
+		dir = DOWN;
+	}
+	else if (GetKeyState('D') < 0)
+	{
+		dir = RIGHT;
 	}
 }
+
 void Logic()
 {
 	int prevX = tailX[0];
@@ -147,7 +149,7 @@ void Logic()
 	}
 	//add this if I want the edges to kill the snake
 	//if (x > width || x < 0 || y > height || y < 0)
-	//  gameOver = true;
+	//gameOver = true;
 	if (X >= Width) X = 0; else if (X < 0) X = Width - 1;
 	if (Y >= Height) Y = 0; else if (Y < 0) Y = Height - 1;
 
@@ -163,6 +165,7 @@ void Logic()
 		nTail++;
 	}
 }
+
 int main()
 {
 	Setup();
@@ -173,9 +176,9 @@ int main()
 		{
 			Sleep(15);
 		}
-
+	
 		Sleep(20);
-
+	
 		if (dir == UP || dir == DOWN)
 		{
 			Sleep(80);
