@@ -34,12 +34,7 @@ class Node
     public:
         //constructor
         Node(char ch, int freq, Node* left, Node* right)
-        {
-            character = ch;
-            frequency = freq;
-            leftNode = left;
-            rightNode = right;
-        }
+            : character(ch), frequency(freq), leftNode(left), rightNode(right) {}
 
         //getters
         char getCharacter()
@@ -82,10 +77,7 @@ class HuffmanCoding
 
     public:
         //constructor
-        HuffmanCoding()
-        {
-            this->root = nullptr;
-        }
+        HuffmanCoding() : root(nullptr) {}
 
         //go through the huffman tree and store huffman codes into charCodes
         void encode(Node* root, string text)
