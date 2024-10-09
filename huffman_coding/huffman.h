@@ -107,6 +107,7 @@ class HuffmanCoding
         void printCodes()
         {
             cout << "Huffman Codes:" << endl;
+            
             for (auto iter = charCodes.begin(); iter != charCodes.end(); iter++)
             {
                 cout << (*iter).first << ": " << (*iter).second << endl;
@@ -117,6 +118,7 @@ class HuffmanCoding
         void printFrequency()
         {
             cout << "Frequency Table:" << endl;
+            
             for (auto iter = this->charFreq.begin(); iter != this->charFreq.end(); iter++)
             {
                 cout << (*iter).first << ": " << (*iter).second << endl;
@@ -127,10 +129,12 @@ class HuffmanCoding
         string getEncodedString(string text)
         {
             string encodedText = "";
+            
             for (char character : text)
             {
                 encodedText += this->charCodes[character];
             }
+            
             return encodedText;
         }
 
@@ -164,6 +168,7 @@ class HuffmanCoding
                     traversalNode = this->root;
                 }
             }
+            
             return decodedText;
         }
 
@@ -203,7 +208,6 @@ class HuffmanCoding
                 pq.push(this->root);
             }
             
-            //encode text
             text = "";
             encode(this->root, text);
         }
