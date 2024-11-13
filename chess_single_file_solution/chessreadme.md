@@ -13,7 +13,9 @@ As of now I can only upload the source code so in order to run it, you need to d
 are using visual studio, make a new project and put the c++ file in the project directory where needed and drag the c++ files under source template and it should run.
 
 ## Project Images
+
 Main board:
+
 <img width="654" alt="main board" src="https://github.com/user-attachments/assets/e71c2b98-4a72-47f5-9a69-e83e82830fba">
 
 Piece being killed and sent to the killzone:
