@@ -1,9 +1,9 @@
-**About the project**
-
+# Command Line Chess
+## About the project
 After a few months of on and off work with the little free time I had, I finally finished my chess cmd line project in c++. It works great and allows you to have 
-full chess functionality including castling and en passant. There is also a check for checkmate and stalemate to see who won or caused a tie game.
+full chess functionality including castling and en passant. There are also endgame checks for checkmate and stalemate to see who won or caused a tie game.
 It also includes a saveslot system which is infinitely expandable where you can save, load, or delete savefiles to saveslots. I learned a lot while making this
-project like how to use fstream and more about vectors than I previously knew, but the worst part about making the project was testing every situation by hand.
+project like how to use fstream, basic object oriented programming, game loops/logic, and more about vectors than I previously knew, but the worst part about making the project was testing every situation by hand.
 This is the single file solution which is how I made it, however I will be making a multi file solution for better organization and so I can learn how I should
 be organizing my bigger projects in the future. 
 
