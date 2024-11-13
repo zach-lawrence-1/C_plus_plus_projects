@@ -13,4 +13,4 @@ As long as you have MSYS2 setup and you can run make files then you should be ab
 
 1. Open a terminal in the same directory as the code and make file
 2. Type in ```make```
-3. run ./tree.exe or ./tree.exe directory
+3. run '''./tree.exe''' or '''./tree.exe directory'''
