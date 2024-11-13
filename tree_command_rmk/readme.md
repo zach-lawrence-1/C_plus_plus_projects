@@ -12,5 +12,5 @@ I don't think I can post my code including the syscall implementation due to pot
 As long as you have MSYS2 setup and you can run make files then you should be able to run the code as follows:
 
 1. Open a terminal in the same directory as the code and make file
-2. Type in make
+2. Type in ```make```
 3. run ./tree.exe or ./tree.exe directory
