@@ -1,1 +1,0 @@
-I wanted to add more functionality like storing the database in files as well as the linked list names that were associated with said files however I realized I cannot make objects with a name from a string as far as I know in c++ so I decided to stop the project here just to show myself how much more I have learned which was the main goal of the project.
