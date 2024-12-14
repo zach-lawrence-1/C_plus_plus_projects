@@ -13,7 +13,7 @@ std::string RandomBlockGenerator()
 
     for (int row = 0; row < 7; row++)
     {
-        for (int col = 0; col < 56; col++)
+        for (int col = 0; col < 58; col++)
         {
             //pick random index from charsAndNums and add that char to randomStr
             int randomNumber = rand() % 37;
@@ -58,16 +58,12 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string tex
         //skip first and last layers of text
         if (y == 0 || y == 6)
         {
-            strIndex = 70;
+            strIndex = 72;
             continue;
         }
 
         for (int j = 0; j < 8; j++)
         {
-            //std::cout << "curr Y: " << y << std::endl;
-            //std::cout << "curr j: " << j << std::endl;
-            //std::cout << "index: " << strIndex << " size: " << textBlock.length() << std::endl;
-
             bool color = 0;
             unsigned long int temp = (clock[clockDigits[j]] >> 5 * (y - 1)) & 31;
 
@@ -94,9 +90,9 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string tex
             textBlock.insert(strIndex, "\033[38;5;244m");
             strIndex += 13;
         }
+        strIndex += 3;
     }
 
-    //std::cout << "tetetete" << std::endl;
     std::cout << textBlock << std::endl;
 }
 
@@ -108,9 +104,7 @@ int main()
                                    33095231, 32570943, 131200
                                   };
     int clockDigits[8];
-    
     std::string randomText = RandomBlockGenerator();
-    std::cout << randomText << std::endl;
     ExtractCurrentTime(clockDigits);
     PrintClock(clock, clockDigits, randomText);
 }
