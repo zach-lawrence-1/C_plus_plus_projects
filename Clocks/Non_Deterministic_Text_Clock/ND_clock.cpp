@@ -1,3 +1,5 @@
+#include <windows.h>
+
 #include <iostream>
 #include <string>
 #include <thread>
@@ -45,10 +47,10 @@ void ExtractCurrentTime(int clockDigits[8])
     clockDigits[6] = second / 10;
     clockDigits[7] = second % 10;
 
-    std::cout << "Time: " << clockDigits[0] << clockDigits[1] << ":" << clockDigits[3] << clockDigits[4] << ":" << clockDigits[6] << clockDigits[7] << std::endl;
+    //std::cout << "Time: " << clockDigits[0] << clockDigits[1] << ":" << clockDigits[3] << clockDigits[4] << ":" << clockDigits[6] << clockDigits[7] << std::endl;
 }
 
-void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string textBlock)
+void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string &textBlock)
 {
     textBlock.insert(0, "\033[38;5;244m");
     int strIndex = 0;
@@ -72,14 +74,14 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string tex
                 bool currBit = (temp << k) & 16;
                 if (currBit == 1 && color == 0)
                 {
-                    textBlock.insert(strIndex, "\033[1;33m");
-                    strIndex += 8;
+                    textBlock.insert(strIndex, "\033[1;43;33m");
+                    strIndex += 11;
                     color = 1;
                 }
                 else if (currBit == 0 && color == 1)
                 {
-                    textBlock.insert(strIndex, "\033[38;5;244m");
-                    strIndex += 12;
+                    textBlock.insert(strIndex, "\033[0m\033[38;5;244m");
+                    strIndex += 16;
                     color = 0;
                 }
                 else
@@ -87,8 +89,8 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string tex
                     strIndex++;
                 }
             }
-            textBlock.insert(strIndex, "\033[38;5;244m");
-            strIndex += 13;
+            textBlock.insert(strIndex, "\033[0m\033[38;5;244m");
+            strIndex += 17;
         }
         strIndex += 3;
     }
@@ -104,7 +106,23 @@ int main()
                                    33095231, 32570943, 131200
                                   };
     int clockDigits[8];
-    std::string randomText = RandomBlockGenerator();
-    ExtractCurrentTime(clockDigits);
-    PrintClock(clock, clockDigits, randomText);
+    bool exit = false;
+    
+    //TODO: cross platform - make this stuff able to run cross platform
+    //windows only stuff
+    HANDLE consoleHandler = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD topLeft = {0, 0};
+    system("cls");
+
+    while (!exit)
+    {
+        SetConsoleCursorPosition(consoleHandler, topLeft);
+
+        std::string randomText = RandomBlockGenerator();
+        ExtractCurrentTime(clockDigits);
+        PrintClock(clock, clockDigits, randomText);
+
+        SetConsoleCursorPosition(consoleHandler, topLeft);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 }
