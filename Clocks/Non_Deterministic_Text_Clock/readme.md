@@ -40,3 +40,4 @@ You can also run ```make ct```, ```make random```, ```make shapes``` and execute
 <img width="517" alt="basic_working_clock" src="https://github.com/user-attachments/assets/684d1bbb-413d-42b7-9f09-55d3e17eaf44" />
 
 5. Clock is now cross platform between windows and linux, I have no way of testing for mac so idk if it works there.
+![image](https://github.com/user-attachments/assets/a4d12e42-92a8-44bb-9081-858b4f502e05)
