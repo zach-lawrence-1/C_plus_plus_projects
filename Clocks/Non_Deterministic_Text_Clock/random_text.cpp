@@ -1,10 +1,7 @@
 #include <random>
-#include <ctime>
 #include <iostream>
 #include <string>
 #include <thread>
-#include <stdlib.h>
-#include <windows.h>
 
 //generates a fixed size block of random characters
 std::string randomBlockGenerator()
@@ -15,7 +12,7 @@ std::string randomBlockGenerator()
     std::string charsAndNums = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890=";
     std::string randomStr = "";
 
-    for (int row = 0; row < 9; row++)
+    for (int row = 0; row < 7; row++)
     {
         for (int col = 0; col < 56; col++)
         {
@@ -31,21 +28,19 @@ std::string randomBlockGenerator()
 
 int main()
 {
-    //TODO: cross platform - make this stuff able to run cross platform
-
-    //windows only stuff
-    HANDLE consoleHandler = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD topLeft = {0, 0};
-    system("cls");
+    //clear console output
+    std::cout << "\033[2J";
+    std::cout << "\033[0;0H";
     
-    //change this later
     while (true)
     {
-        //works for now, may need a better way of doing this
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        //set console cursor position to (0, 0)
+        std::cout << "\033[0;0H";
         std::string temp = randomBlockGenerator();
-        std::cout << temp;
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        std::cout << temp << std::endl;
+        std::cout << temp.substr(0, 5);
+        std::cout << "\033[0;0H";
+
         //cross platform sleep method
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
