@@ -1,5 +1,3 @@
-#include <windows.h>
-
 #include <iostream>
 #include <string>
 #include <thread>
@@ -46,8 +44,6 @@ void ExtractCurrentTime(int clockDigits[8])
     clockDigits[5] = 10;
     clockDigits[6] = second / 10;
     clockDigits[7] = second % 10;
-
-    //std::cout << "Time: " << clockDigits[0] << clockDigits[1] << ":" << clockDigits[3] << clockDigits[4] << ":" << clockDigits[6] << clockDigits[7] << std::endl;
 }
 
 void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string &textBlock)
@@ -64,6 +60,7 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string &te
             continue;
         }
 
+        //coloring logic
         for (int j = 0; j < 8; j++)
         {
             bool color = 0;
@@ -89,9 +86,11 @@ void PrintClock(unsigned long int clock[11], int clockDigits[8], std::string &te
                     strIndex++;
                 }
             }
+
             textBlock.insert(strIndex, "\033[0m\033[38;5;244m");
             strIndex += 17;
         }
+
         strIndex += 3;
     }
 
@@ -107,22 +106,22 @@ int main()
                                   };
     int clockDigits[8];
     bool exit = false;
-    
-    //TODO: cross platform - make this stuff able to run cross platform
-    //windows only stuff
-    HANDLE consoleHandler = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD topLeft = {0, 0};
-    system("cls");
+
+    //ansi escape codes for clearing screen and setting console position respectively
+    std::cout << "\033[2J";
+    std::cout << "\033[0;0H";
 
     while (!exit)
     {
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        std::cout << "\033[0;0H";
 
         std::string randomText = RandomBlockGenerator();
         ExtractCurrentTime(clockDigits);
         PrintClock(clock, clockDigits, randomText);
+    
+        std::cout << "\033[0;0H";
 
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        //cross platform sleep for the current thread which is the main thread
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
