@@ -1,18 +1,17 @@
-#include <ctime>
 #include <iostream>
 #include <thread>
-#include <windows.h>
 
 int main()
 {
-    HANDLE consoleHandler = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD topLeft = {0, 0};
-    system("cls");
+    //clear console output
+    std::cout << "\033[2J";
+    std::cout << "\033[0;0H";
 
-    //change this later
     while (true)
     {
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        //set console cursor position to (0, 0)
+        std::cout << "\033[0;0H";
+        
         //get current time
         time_t currTime = time(0);
         tm* localTime = localtime(&currTime);
@@ -23,7 +22,8 @@ int main()
         int second = localTime->tm_sec;
 
         std::cout << "Time: " << hour << ":" << minute << ":" << second << std::endl;
-        SetConsoleCursorPosition(consoleHandler, topLeft);
+        std::cout << "\033[0;0H";
+
         //cross platform sleep method
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
