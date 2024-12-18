@@ -25,9 +25,9 @@ On windows, as long as you have MSYS2 setup with g++ and you can run make files 
 4. run ```./ND.exe```
 ### Linux
 As long as you have g++ and make installed and running on your linux box, you should be able to run the main program as follows:
-3. Open a terminal in the same directory as the code and make file or just navigate there via cd commands.
-4. Type in ```make ND```
-5. run ```./ND```
+1. Open a terminal in the same directory as the code and make file or just navigate there via cd commands.
+2. Type in ```make ND```
+3. run ```./ND```
 
 You can also run ```make ct```, ```make random```, ```make shapes``` and execute the associated executable/elf files to run the individual pieces I broke the problem into if you want.
 ## Updates
